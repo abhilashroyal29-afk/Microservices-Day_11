@@ -14,12 +14,13 @@ public class UserClient {
 
     private final RestClient restClient;
 
-    public UserDto getUserById(Long id) {
+    public UserDto getUserById(Long id, String correlationId) {
 
         try {
 
             return restClient.get()
                     .uri("/api/users/{id}", id)
+                    .header("X-Correlation-ID", correlationId)
                     .retrieve()
                     .body(UserDto.class);
 
