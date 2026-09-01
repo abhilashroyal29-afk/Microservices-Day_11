@@ -1,5 +1,6 @@
 package com.microservice.order.service;
 
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.stereotype.Service;
@@ -36,10 +37,15 @@ public class OrderService {
 		    throw new DuplicateOrderException(
 		            "Order Already Exists");
 		}
+		String correlationId = UUID.randomUUID().toString();
+
+		System.out.println("CorrelationId : "
+		        + correlationId
+		        + " - Calling User Service");
 		
 	    UserDto user =
 	            userClient.getUserById(
-	                    request.getUserId()
+	                    request.getUserId(),correlationId
 	            );
 
 	    Order order = new Order();
@@ -77,7 +83,8 @@ public class OrderService {
 
     public OrderResponse getOrder(Long orderId) {
     	
-    	System.out.println("Calling User Service.."+System.currentTimeMillis());
+    	System.out.println("Calling User Service..." +
+    	        System.currentTimeMillis());
 
     	Order order = orderRespository
     	        .findById(orderId)
@@ -92,8 +99,9 @@ public class OrderService {
 
         	UserDto user =
         			userClient.getUserById(
-        			order.getUserId()
-        			);
+        				    order.getUserId(),
+        				    UUID.randomUUID().toString()
+        				);
 
         	return new OrderResponse(
         		    order.getOrderId(),
