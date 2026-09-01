@@ -1,5 +1,7 @@
 package com.microservice.order.controller;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
@@ -52,10 +54,14 @@ public class OrderController {
 	}
 	@GetMapping("/{id}/user")
 	public String getOrderUser(@PathVariable Long id) {
-		UserDto user = userClient.getUserById(id);
-		return "User Name : "+ user.getName();
+	    UserDto user = userClient.getUserById(
+	        id,
+	        UUID.randomUUID().toString()
+	    );
+	    return "User Name : " + user.getName();
+	}
 		
 		
 	}
 
-}
+
